@@ -35,9 +35,9 @@ ip -4 -d address show | \
      }'
    
 echo -e "\nRoutes:"
-ip -4 route show | awk -v cold="${colordev}" -v coli="${colorip}" -v colr="${colorrst}" \
+ip -4 -d route show | awk -v cold="${colordev}" -v coli="${colorip}" -v colr="${colorrst}" \
   '{ 
-     routes[$1] = $3
+     routes[$2] = $4
    } 
    END {
      PROCINFO["sorted_in"] = "@ind_str_asc"
@@ -63,4 +63,5 @@ ip -4 route show | awk -v cold="${colordev}" -v coli="${colorip}" -v colr="${col
 #  v1.5, removed grep and redundant awk, called out sort as a dep, been there forever.
 #        sort keeps the routes grouped by interface/ip. It could be removed without
 #        impacting the function of the script. //20221125
-#  v1.6, rely on gawk to sort the routes. removes sort command
+#  v1.6, rely on gawk to sort the routes. removes sort command.
+#  v1.6.1, added -d to routes and changed parsed fields command for consistency
