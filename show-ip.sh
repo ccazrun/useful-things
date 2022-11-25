@@ -51,4 +51,5 @@ ip -4 route show | sort --key=3.6 | awk -v cold="${colordev}" -v coli="${colorip
 #  after the pipe through awk -- becomes a newline and the 2 lines above become one
 #      link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00  inet 127.0.0.1/8 scope host lo
 #  v1.2, changed interface grep to exclude ipv6 information.
-#  v1.3, changed ip command to only show ipv4 and adjusted awk to parse     
+#  v1.3, changed ip command to only show ipv4 and adjusted awk to parse 
+#  v1.4, adjusted for shellcheck output (quoted variables in awk arg)    
