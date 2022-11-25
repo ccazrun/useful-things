@@ -28,14 +28,14 @@ tabs 2
 echo -e "\nActive Interfaces:"
 ip -4 -d address show | grep -B1 -E "^  +inet " | \
   awk ' { if ($1=="--" ) printf("\n"); else printf("%s ",$0); } ' | \
-  awk -v colm=${colormac} -v coli=${colorip} -v colr=${colorrst} -v cold=${colordev} \
+  awk -v colm="${colormac}" -v coli="${colorip}" -v colr="${colorrst}" -v cold="${colordev}" \
     '{
        printf("  %s%-18s%s\tMAC: %s%s%s\t IP: %s%s%s\n", cold,$NF,colr,colm,$2,colr,coli,$20,colr ); 
      }'
   # first awk concats the 2 lines from grep -B1
    
 echo -e "\nRouting:"
-ip -4 route show | sort --key=3.6 | awk -v cold=${colordev} -v coli=${colorip} -v colr=${colorrst} \
+ip -4 route show | sort --key=3.6 | awk -v cold="${colordev}" -v coli="${colorip}" -v colr="${colorrst}" \
   '{
      printf("  %s%-18s%s\tvia: %s%s%s\n",coli,$1,colr,cold,$3,colr);
    } END { printf("\n"); }'  
