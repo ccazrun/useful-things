@@ -1,7 +1,7 @@
 #!/bin/bash
 ## title        :show-ip.sh
 ## description  :ip, mac and routing information with clean, minimal output
-## depends      :tput, tabs, echo, ip, awk, sort*
+## depends      :tput, tabs, echo, ip, (g)awk
 ## works in     :GNU bash version 4.3.11(1) and up.
 ## author       :starling
 ## date         :20150207
@@ -34,12 +34,18 @@ ip -4 -d address show | \
       if ( $1 ~ /inet/ ) { printf("IP: %s%s%s\n",coli,$2,colr) } 
      }'
    
-echo -e "\nRouting:"
-ip -4 route show | sort --key=3.6 | awk -v cold="${colordev}" -v coli="${colorip}" -v colr="${colorrst}" \
-  '{
-     printf("  %s%-18s%s\tvia: %s%s%s\n",coli,$1,colr,cold,$3,colr);
-   } END { printf("\n"); }'  
-
+echo -e "\nRoutes:"
+ip -4 route show | awk -v cold="${colordev}" -v coli="${colorip}" -v colr="${colorrst}" \
+  '{ 
+     routes[$1] = $3
+   } 
+   END {
+     PROCINFO["sorted_in"] = "@ind_str_asc"
+     for (r in routes) { 
+       printf("  %s%-18s%s\tvia: %s%s%s\n", coli,r,colr,cold,routes[r],colr)
+     }
+     printf("\n")
+   }'
 
 #  as of 1.5 awk relies on the output of the ip command directly.
 #    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
@@ -57,3 +63,4 @@ ip -4 route show | sort --key=3.6 | awk -v cold="${colordev}" -v coli="${colorip
 #  v1.5, removed grep and redundant awk, called out sort as a dep, been there forever.
 #        sort keeps the routes grouped by interface/ip. It could be removed without
 #        impacting the function of the script. //20221125
+#  v1.6, rely on gawk to sort the routes. removes sort command
