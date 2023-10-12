@@ -29,7 +29,7 @@ echo -e "\nActive Interfaces:"
 ip -4 -d address show | \
   awk -v colm="${colormac}" -v coli="${colorip}" -v colr="${colorrst}" -v cold="${colordev}" \
     '{ 
-      if ( $3 ~ /UP/   ) { printf("  %s%-18s%s\t", cold, substr($2,1, length($2)-1),colr) }
+      if ( $3 ~ /UP/   ) { printf("  %s%-18s%s\t", cold, substr($2,1, length($2)-1),colr) } else if ( $9 ~ /DOWN/ ) { printf("  %s%-18s%s\t", cold, " ", colr) } 
       if ( $1 ~ /link/ ) { printf("MAC: %s%s%s\t",colm,$2,colr) }
       if ( $1 ~ /inet/ ) { printf("IP: %s%s%s\n",coli,$2,colr) } 
      }'
@@ -65,3 +65,4 @@ ip -4 -d route show | awk -v cold="${colordev}" -v coli="${colorip}" -v colr="${
 #        impacting the function of the script. //20221125
 #  v1.6, rely on gawk to sort the routes. removes sort command.
 #  v1.6.1, added -d to routes and changed parsed fields command for consistency
+#  v1.7, handle interfaces that are not up but listed
